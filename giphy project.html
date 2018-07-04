@@ -10,36 +10,44 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
     <style>
-    .buttons{
-        padding: 20px;
-    }
-    
-    
+        .button {
+            padding: 20px;
+        }
+        #container{
+            text-align: center;
+            background-color: darkslategray;
+            color: darkorange;
+
+        }
     </style>
 
 </head>
 
 <body>
-    <div id="container">Giftastic!</div>
-    <div id="buttons" class="row"></div>
+    <div id="container"><h1>Giftastic!</h1></div>
+    <div class="row"></div>
+    <div class="col-md-1"></div>
+    <div class="col-lg-10" id="buttons"></div>
+    <div class="col-md-1">
+    </div>
     <br>
     <div class="row">
-        <div class="col-md-2">a</div>
+        <div class="col-md-2"></div>
         <div class="col-md-8">
             <form id="gifs">
-                <label for="gif-input">Add an element</label>
+                <label for="gif-input">Look up something! Then press a button</label>
                 <input type="text" id="gif-input">
                 <br>
                 <input type="submit" id="add-gif" value="MAGIC!">
             </form>
         </div>
-        <div class="col-md-2">a</div>
+        <div class="col-md-2"></div>
     </div>
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
-        <div id="gifs-appear-here">
-        </div>
+            <div id="gifs-appear-here">
+            </div>
         </div>
         <div class="col-md-2"></div>
     </div>
