@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Magic Gif Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <style>
+        .button {
+            padding: 20px;
+        }
+        #container{
+            text-align: center;
+            background-color: darkslategray;
+            color: darkorange;
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="container"><h1>Giftastic!</h1></div>
+    <div class="row"></div>
+    <div class="col-md-1"></div>
+    <div class="col-lg-10" id="buttons"></div>
+    <div class="col-md-1">
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form id="gifs">
+                <label for="gif-input">Look up something! Then press a button</label>
+                <input type="text" id="gif-input">
+                <br>
+                <input type="submit" id="add-gif" value="MAGIC!">
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div id="gifs-appear-here">
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <script type="text/javascript">
+
+        var topics = [];
+
+        function renderButtons() {
+
+            $("#buttons").empty();
+            for (let i = 0; i < topics.length; i++) {
+
+                var a = $("<button>");
+                a.addClass("topic");
+                a.attr("data-name", topics[i]);
+                a.text(topics[i]);
+                $("#buttons").append(a);
+            }
+
+        }
+
+        $("#add-gif").on("click", function (event) {
+
+            event.preventDefault();
+            var topic = $("#gif-input").val().trim();
+            topics.push(topic);
+            renderButtons();
+
+            $(".topic").on("click", function () {
+
+                var search = $(this).attr("data-name");
+                var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + search + "&api_key=0ZlXTiK7I8jLMooKtq1QskCTgdpwdfaL&limit=10";
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                })
+
+                    .then(function (response) {
+                        var results = response.data;
+
+                        for (var i = 0; i < results.length; i++) {
+                            var gifDiv = $("<div class='item'>");
+
+                            var rating = results[i].rating;
+
+                            var p = $("<p>").text("Rating: " + results[i].rating);
+
+                            var topicImage = $("<img>");
+                            topicImage.attr("src", results[i].images.fixed_height_still.url);
+
+                            gifDiv.prepend(p);
+                            gifDiv.prepend(topicImage);
+
+                            var animateImg = results[i].images.fixed_height.url;
+                            var stillImg = results[i].images.fixed_height_still.url;
+
+                            topicImage.attr("src", stillImg);
+                            topicImage.attr("data-still", stillImg);
+                            topicImage.attr("data-animate", animateImg);
+                            topicImage.attr("data-state", "still");
+                            topicImage.addClass("gif");
+                            console.log(response);
+
+
+
+                            $("#gifs-appear-here").prepend(gifDiv);
+                        }
+                    });
+            });
+
+        });
+        function playGif() {
+
+            // console.log(this);
+
+            var state = $(this).attr("data-state");
+
+            // console.log(state);
+
+            if (state === "still") {
+
+                $(this).attr("src", $(this).attr("data-animate"));
+
+                $(this).attr("data-state", "animate");
+
+            } else {
+
+                $(this).attr("src", $(this).attr("data-still"));
+
+                $(this).attr("data-state", "still");
+
+            }
+
+        };
+
+        $(document).on("click", ".gif", playGif);
+
+
+    </script>
+</body>
+
+</html>
